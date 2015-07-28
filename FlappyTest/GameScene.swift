@@ -79,6 +79,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
         // only need this for it's dimensions
         let groundTex = SKTexture(imageNamed: "land")
+        let groundHeight = groundTex.size().height
 
         let skyTexSize   = skyTex.size()
         let skyTexWidth  = skyTexSize.width
@@ -107,7 +108,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             sprite.zPosition = -20 // -20, find out what the others are
 
             // i * width to stagger right, height = sprite.height * scale - ground.height
-            sprite.position = CGPoint(x: i * sprite.size.width, y: sprite.size.height * scale - groundTex.size().height)
+            sprite.position = CGPoint(x: i * sprite.size.width, y: sprite.size.height * scale - groundHeight)
 
             sprite.runAction(moveSkySpritesForever)
             self.scrollNode.addChild(sprite)
