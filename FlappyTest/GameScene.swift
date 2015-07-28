@@ -10,6 +10,10 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate
 {
+    // just define the textures, they are added to SKSpriteNodes when the object is created
+    let heroTexture   = SKTexture(imageNamed: "dickbutt")
+    let skyTexture    = SKTexture(imageNamed: "sky")
+    let groundTexture = SKTexture(imageNamed: "ground")
 
     let skyColor = SKColor(red: 0, green: 191, blue: 255, alpha: 1)
 
@@ -23,20 +27,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     let levelCat: UInt32 = 1 << 2 // 4
     let scoreCat: UInt32 = 1 << 3 // 8
 
+    // dickbutt!
     var hero: SKSpriteNode!
 
+    // scrolling area with texture
     var scrollNode = SKNode()
+
+    // ground area, physics collision
     var groundNode = SKNode()
 
+
+
+
     // setup
-    override func didMoveToView(view: SKView) {
+    override func didMoveToView(view: SKView)
+    {
         self.backgroundColor = self.skyColor
 
         // set world physics
         // x, positive = right, negative = left
         // y, positive = up, negative = down
-        self.physicsWorld.gravity = CGVector(dx: 0, dy: -8)
+        self.physicsWorld.gravity         = CGVector(dx: 0, dy: -8)
         self.physicsWorld.contactDelegate = self
+
+        self.heroTexture.filteringMode   = SKTextureFilteringMode.Linear
+        self.skyTexture.filteringMode    = SKTextureFilteringMode.Nearest
+        self.groundTexture.filteringMode = SKTextureFilteringMode.Nearest
 
         self.hero = self.setupHero()
         self.setupGround()
@@ -46,12 +62,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
     func setupHero() -> SKSpriteNode
     {
-        let heroTexture = SKTexture(imageNamed: "dickbutt")
-        heroTexture.filteringMode = SKTextureFilteringMode.Nearest
-
-        let hero = SKSpriteNode(texture: heroTexture)
+        let hero      = SKSpriteNode(texture: heroTexture)
         hero.position = CGPoint(x: self.frame.size.width * 0.33, y: self.frame.size.height * 0.75)
 
+        // set the "hitbox" for physics interactions
         hero.physicsBody = SKPhysicsBody(rectangleOfSize: hero.size)
         hero.physicsBody?.allowsRotation = false
 
@@ -72,57 +86,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
 
 
-    func setupSkyLine()
-    {
-        let skyTex = SKTexture(imageNamed: "sky")
-        skyTex.filteringMode = SKTextureFilteringMode.Nearest
-
-        // only need this for it's dimensions
-        let groundTex = SKTexture(imageNamed: "land")
-        let groundHeight = groundTex.size().height
-
-        let skyTexSize   = skyTex.size()
-        let skyTexWidth  = skyTexSize.width
-        let skyTexHeight = skyTexSize.height
-
-        self.log("setupSkyLine: skyTexSize: \(skyTexSize)")
-
-        let scale:CGFloat = CGFloat(2.0)
-        let skyMoveTime = NSTimeInterval(40)
-
-        let moveSkySprite = SKAction.moveByX(-skyTexWidth * scale, y: 0, duration: skyMoveTime)
-
-        let resetSkySprite = SKAction.moveByX(skyTexWidth * scale, y: 0, duration: 0.0)
-
-        let moveSkySpritesForever = SKAction.repeatActionForever(SKAction.sequence([moveSkySprite, resetSkySprite]))
-
-        for var i:CGFloat = 0; i <= scale; i++
-        {
-            // sprite.size = skyTex (336 x 112 for that image)
-            let sprite = SKSpriteNode(texture: skyTex)
-
-            // scale sprite.size to fill more screen
-            sprite.setScale(scale)
-            self.log("setupSkyLine: sprite position: \(i * sprite.size.width)")
-
-            sprite.zPosition = -20 // -20, find out what the others are
-
-            // i * width to stagger right, height = sprite.height * scale - ground.height
-            sprite.position = CGPoint(x: i * sprite.size.width, y: sprite.size.height * scale - groundHeight)
-
-            sprite.runAction(moveSkySpritesForever)
-            self.scrollNode.addChild(sprite)
-        }
-    }
-
-
 
     func setupGround()
     {
-        let groundTex = SKTexture(imageNamed: "land")
-        groundTex.filteringMode = SKTextureFilteringMode.Nearest
-
-        let groundTexSize   = groundTex.size()
+        let groundTexSize   = self.groundTexture.size()
         let groundTexWidth  = groundTexSize.width
         let groundTexHeight = groundTexSize.height
 
@@ -131,20 +98,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         // scale up groundTex cause its low-res lol
         // if they were full-res i wouldn't have to
         // this is used when adding ground texture sprites to the scrollNode
-        let scale:CGFloat = CGFloat(2.0)
+        let scale:CGFloat = 2.0
 
         // define animations!
         // lower number = faster interval (duh)
         let groundMoveTime = NSTimeInterval(10)
 
         // move ground to the left (negative x-axis) on a timer, defined above
-        let moveGroundSprite = SKAction.moveByX(-groundTexWidth * scale, y: 0, duration: groundMoveTime)
+        let moveGround = SKAction.moveByX(-groundTexWidth * scale, y: 0, duration: groundMoveTime)
 
         // reset ground so it looks like its continuous
-        let resetGroundSprite = SKAction.moveByX(groundTexWidth * scale, y: 0, duration: 0.0)
+        let resetGround = SKAction.moveByX(groundTexWidth * scale, y: 0, duration: 0.0)
+
+        // set the animation sequence order
+        let groundSequence = SKAction.sequence([moveGround, resetGround])
 
         // this is the "main" action that gets set on the sprite, that is a sequence of the above 2 actions
-        let moveGroundSpritesForever = SKAction.repeatActionForever(SKAction.sequence([moveGroundSprite, resetGroundSprite]))
+        let groundAnimation = SKAction.repeatActionForever(groundSequence)
 
         // add enough sprites to the scrolling node so you dont run out before it resets
         // i < 2.0 * self.frame.size.width / (groundTexWidth * 2)
@@ -152,16 +122,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         for var i:CGFloat = 0; i <= scale; i++
         {
             // sprite.size = groundTex.size (336 x 112 for that image)
-            let sprite = SKSpriteNode(texture: groundTex)
+            let sprite = SKSpriteNode(texture: self.groundTexture)
 
             // scale sprite.size to fill more screen
             sprite.setScale(scale)
-            self.log("setupGround: sprite position: \(i * sprite.size.width)")
+
+            let spriteX = i * sprite.size.width
+            let spriteY = sprite.size.height / scale
+            self.log("setupGround: sprite x,y: \(spriteX), \(spriteY)")
 
             // i * width to stagger right, height / 2 because scale
-            sprite.position = CGPoint(x: i * sprite.size.width, y: sprite.size.height / scale)
+            sprite.position = CGPoint(x: spriteX, y: spriteY)
 
-            sprite.runAction(moveGroundSpritesForever)
+            sprite.runAction(groundAnimation)
             self.scrollNode.addChild(sprite)
         }
 
@@ -178,13 +151,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
 
 
+    func setupSkyLine()
+    {
+        let skyTextureSize  = self.skyTexture.size()
+        let skyTextureWidth = skyTextureSize.width
+        let scale:CGFloat   = 2.0
+        let skyMoveTime     = NSTimeInterval(40)
+
+        let moveSky      = SKAction.moveByX(-skyTextureWidth * scale, y: 0, duration: skyMoveTime)
+        let resetSky     = SKAction.moveByX(skyTextureWidth * scale, y: 0, duration: 0.0)
+        let skySequence  = SKAction.sequence([moveSky, resetSky])
+        let skyAnimation = SKAction.repeatActionForever(skySequence)
+
+        self.log("setupSkyLine: skyTextureSize: \(skyTextureSize)")
+
+        for var i:CGFloat = 0; i <= scale; i++
+        {
+            let sprite = SKSpriteNode(texture: self.skyTexture)
+            sprite.setScale(scale)
+
+            // i * width to stagger right, height = sprite.height * scale - ground.height
+            let spriteX = i * sprite.size.width
+            let spriteY = (sprite.size.height * scale) - self.groundTexture.size().height
+
+            self.log("setupSkyLine: sprite x,y: \(spriteX), \(spriteY)")
+
+            sprite.position  = CGPoint(x: spriteX, y: spriteY)
+
+            // everything else resides on z-position 0
+            sprite.zPosition = -1
+
+            sprite.runAction(skyAnimation)
+            self.scrollNode.addChild(sprite)
+        }
+    }
+
+
+
     private func log(message: String)
     {
         #if DEBUG
             println(message)
         #endif
     }
-
 
     // touch me
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent)
