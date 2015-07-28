@@ -80,10 +80,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let groundTexWidth  = groundTexSize.width
         let groundTexHeight = groundTexSize.height
 
-        println("setupGround: groundTexSize: \(groundTexSize)")
+        self.log("setupGround: groundTexSize: \(groundTexSize)")
 
-        // scale up these small ass images lol
+        // scale up groundTex cause its low-res lol
         // if they were full-res i wouldn't have to
+        // this is used when adding ground texture sprites to the scrollNode
         let scale:CGFloat = CGFloat(2.0)
 
         // define animations!
@@ -106,9 +107,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         {
             // sprite.size = groundTex.size (336 x 112 for that image)
             let sprite = SKSpriteNode(texture: groundTex)
-            sprite.setScale(scale)
 
-            println("setupGround: sprite position: \(i * sprite.size.width)")
+            // scale sprite.size to fill more screen
+            sprite.setScale(scale)
+            self.log("setupGround: sprite position: \(i * sprite.size.width)")
 
             // i * width to stagger right, height / 2 because scale
             sprite.position = CGPoint(x: i * sprite.size.width, y: sprite.size.height / scale)
@@ -117,7 +119,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             self.scrollNode.addChild(sprite)
         }
 
-
+        // groundNode is the physics body that gets collided with, groundTexHeight = sprite.height/2 (cause of scale)
         self.groundNode.position = CGPoint(x: 0, y: groundTexHeight)
         self.groundNode.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: self.frame.size.width, height: groundTexHeight * scale))
         self.groundNode.physicsBody?.dynamic = false
@@ -126,6 +128,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         // scrollNode and groundNode are entirely separate things that just happen to reside in the same coordinate-space (for obv reasons)
         self.addChild(self.groundNode)
         self.addChild(self.scrollNode)
+    }
+
+
+
+    private func log(message: String)
+    {
+        #if DEBUG
+            println(message)
+        #endif
     }
 
 
