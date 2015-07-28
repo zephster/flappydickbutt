@@ -40,6 +40,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
         self.hero = self.setupHero()
         self.setupGround()
+        self.setupSkyLine()
     }
 
 
@@ -67,6 +68,50 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         // add to scene
         self.addChild(hero)
         return hero
+    }
+
+
+
+    func setupSkyLine()
+    {
+        let skyTex = SKTexture(imageNamed: "sky")
+        skyTex.filteringMode = SKTextureFilteringMode.Nearest
+
+        // only need this for it's dimensions
+        let groundTex = SKTexture(imageNamed: "land")
+
+        let skyTexSize   = skyTex.size()
+        let skyTexWidth  = skyTexSize.width
+        let skyTexHeight = skyTexSize.height
+
+        self.log("setupSkyLine: skyTexSize: \(skyTexSize)")
+
+        let scale:CGFloat = CGFloat(2.0)
+        let skyMoveTime = NSTimeInterval(40)
+
+        let moveSkySprite = SKAction.moveByX(-skyTexWidth * scale, y: 0, duration: skyMoveTime)
+
+        let resetSkySprite = SKAction.moveByX(skyTexWidth * scale, y: 0, duration: 0.0)
+
+        let moveSkySpritesForever = SKAction.repeatActionForever(SKAction.sequence([moveSkySprite, resetSkySprite]))
+
+        for var i:CGFloat = 0; i <= scale; i++
+        {
+            // sprite.size = skyTex (336 x 112 for that image)
+            let sprite = SKSpriteNode(texture: skyTex)
+
+            // scale sprite.size to fill more screen
+            sprite.setScale(scale)
+            self.log("setupSkyLine: sprite position: \(i * sprite.size.width)")
+
+            sprite.zPosition = -20 // -20, find out what the others are
+
+            // i * width to stagger right, height = sprite.height * scale - ground.height
+            sprite.position = CGPoint(x: i * sprite.size.width, y: sprite.size.height * scale - groundTex.size().height)
+
+            sprite.runAction(moveSkySpritesForever)
+            self.scrollNode.addChild(sprite)
+        }
     }
 
 
