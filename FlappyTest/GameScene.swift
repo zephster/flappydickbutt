@@ -45,17 +45,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
     func setupHero() -> SKSpriteNode
     {
-        let heroTexture = SKTexture(imageNamed: "bowst")
+        let heroTexture = SKTexture(imageNamed: "dickbutt")
         heroTexture.filteringMode = SKTextureFilteringMode.Nearest
 
         let hero = SKSpriteNode(texture: heroTexture)
-
-        // set the scale here so when i call hero.size later it works
-        // hero.setScale(0.75)
-        hero.position = CGPoint(x: self.frame.size.width * 0.35, y: self.frame.size.height * 0.6)
+        hero.position = CGPoint(x: self.frame.size.width * 0.33, y: self.frame.size.height * 0.75)
 
         hero.physicsBody = SKPhysicsBody(rectangleOfSize: hero.size)
-        hero.physicsBody?.dynamic = true
         hero.physicsBody?.allowsRotation = false
 
         // set this value so when collission happens, i can test the "category" property to determine
@@ -78,45 +74,52 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     func setupGround()
     {
         let groundTex = SKTexture(imageNamed: "land")
+        groundTex.filteringMode = SKTextureFilteringMode.Nearest
 
         let groundTexSize   = groundTex.size()
         let groundTexWidth  = groundTexSize.width
         let groundTexHeight = groundTexSize.height
 
+        println("setupGround: groundTexSize: \(groundTexSize)")
+
+        // scale up these small ass images lol
+        // if they were full-res i wouldn't have to
         let scale:CGFloat = CGFloat(2.0)
 
-
-        println(groundTexWidth) // 336
-        println(groundTexWidth * 2.0) // 672
-        println(0.02 * groundTexWidth * 2.0) // 13.44
-        println(2.0 * self.frame.width / (groundTexWidth * 2.0)) // 3.0476...
-
+        // define animations!
         // lower number = faster interval (duh)
         let groundMoveTime = NSTimeInterval(10)
 
         // move ground to the left (negative x-axis) on a timer, defined above
         let moveGroundSprite = SKAction.moveByX(-groundTexWidth * scale, y: 0, duration: groundMoveTime)
 
-        // reset ground so it looks like its continuous. works cause bg is the same in and out
+        // reset ground so it looks like its continuous
         let resetGroundSprite = SKAction.moveByX(groundTexWidth * scale, y: 0, duration: 0.0)
 
-        //
+        // this is the "main" action that gets set on the sprite, that is a sequence of the above 2 actions
         let moveGroundSpritesForever = SKAction.repeatActionForever(SKAction.sequence([moveGroundSprite, resetGroundSprite]))
-        groundTex.filteringMode = SKTextureFilteringMode.Nearest
 
-        // add enough sprites to the scrolling node so you dont run out
+        // add enough sprites to the scrolling node so you dont run out before it resets
+        // i < 2.0 * self.frame.size.width / (groundTexWidth * 2)
+        // if scale = 2, above = 3.04, below would iterate 3 times, could be coincidence
         for var i:CGFloat = 0; i <= scale; i++
         {
+            // sprite.size = groundTex.size (336 x 112 for that image)
             let sprite = SKSpriteNode(texture: groundTex)
             sprite.setScale(scale)
-            sprite.position = CGPoint(x: i * sprite.size.width, y: sprite.size.height / 2)
+
+            println("setupGround: sprite position: \(i * sprite.size.width)")
+
+            // i * width to stagger right, height / 2 because scale
+            sprite.position = CGPoint(x: i * sprite.size.width, y: sprite.size.height / scale)
+
             sprite.runAction(moveGroundSpritesForever)
             self.scrollNode.addChild(sprite)
         }
 
 
         self.groundNode.position = CGPoint(x: 0, y: groundTexHeight)
-        self.groundNode.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: self.frame.size.width, height: groundTexHeight * 2.0))
+        self.groundNode.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: self.frame.size.width, height: groundTexHeight * scale))
         self.groundNode.physicsBody?.dynamic = false
         self.groundNode.physicsBody?.categoryBitMask = self.levelCat
 
@@ -133,7 +136,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.hero.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
 
         // then apply a force upwards
-        self.hero.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+        self.hero.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
     }
    
     override func update(currentTime: CFTimeInterval) {
