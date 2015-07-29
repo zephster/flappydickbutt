@@ -34,22 +34,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
     // z-indexes of stuff
     let groundZpos:CGFloat = 0
-    let skyZpos:CGFloat    = -1
+    let skyZpos:CGFloat    = -2
     let pipeZpos:CGFloat   = -1
 
     // dickbutt!
     var hero: SKSpriteNode!
 
-    // scrolling area with texture
-    var scrollNode = SKNode()
+    // node that contains the ground and sky's generated nodes
+    var environmentNode = SKNode()
 
     // ground area, physics collision
     var groundNode = SKNode()
 
-    // vertical area for pipes
-    var pipeNode = SKNode()
+    // vertical area for pipes, physics collisions with pipe nodes
+    var pipesNode = SKNode()
 
-
+    // action that moves the pipes, then removes once off-screen
     var pipeNodeAnimation: SKAction!
 
 
@@ -155,8 +155,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             // i * width to stagger right, height / 2 because scale
             sprite.position = CGPoint(x: spriteX, y: spriteY)
 
+            // z-index
+            sprite.zPosition = self.groundZpos
+
             sprite.runAction(groundAnimation)
-            self.scrollNode.addChild(sprite)
+            self.environmentNode.addChild(sprite)
         }
 
         // groundNode is the physics body that gets collided with, groundTexHeight = sprite.height/2 (cause of scale)
@@ -168,7 +171,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
         // scrollNode and groundNode are entirely separate things that just happen to reside in the same coordinate-space (for obv reasons)
         self.addChild(self.groundNode)
-        self.addChild(self.scrollNode)
+        self.addChild(self.environmentNode)
     }
 
 
@@ -268,7 +271,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         pipePair.addChild(bottomPipe)
 
         pipePair.runAction(self.pipeNodeAnimation)
-        self.pipeNode.addChild(pipePair)
+        self.pipesNode.addChild(pipePair)
     }
 
 
@@ -302,8 +305,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         // start the spawning!
         self.runAction(pipeSpawn)
 
-        // finally, add the pipeNode, which will hold all the pipe objects
-        self.addChild(self.pipeNode)
+        // finally, add the pipeNodes, which will hold all the pipe objects
+        self.addChild(self.pipesNode)
     }
 
 
@@ -331,6 +334,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     {
         println("contact!")
         println(contact)
+
+        self.environmentNode.speed = 0
     }
 
 
