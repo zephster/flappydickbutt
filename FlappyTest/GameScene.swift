@@ -204,11 +204,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             sprite.position  = CGPoint(x: spriteX, y: spriteY)
 
             // everything else resides on z-position 0
-            sprite.zPosition = -2
+            sprite.zPosition = self.skyZpos
 
             sprite.runAction(skyAnimation)
-            self.scrollNode.addChild(sprite)
+            self.environmentNode.addChild(sprite)
         }
+    }
+
+
+
+    private func generatePipe(placement: String, randomOffset offset: CGFloat) -> SKSpriteNode
+    {
+        let texture: SKTexture = (placement == "top")
+                                ? self.pipeDownTexture
+                                : self.pipeUpTexture
+
+        let pipe = SKSpriteNode(texture: texture)
+
+        // shit images
+        pipe.setScale(2.0)
+        let position:CGPoint = (placement == "top")
+                                ? CGPoint(x: 0, y: pipe.size.height + self.pipeGap + offset)
+                                : CGPoint(x: 0, y: offset)
+
+        // set top pipe to top of screen + pipe gap space + random offset
+        pipe.position = position
+
+        // pipes are rectangular anyway, so use a rectangle hitbox
+        pipe.physicsBody = SKPhysicsBody(rectangleOfSize: pipe.size)
+
+        // disable physics forces (gravity pulls the pipe down, lol)
+        pipe.physicsBody?.dynamic = false
+
+        // set category bitmask
+        pipe.physicsBody?.categoryBitMask = self.pipeBitMask
+
+        return pipe
     }
 
 
@@ -216,62 +247,45 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     {
         // node for the up and down pipe to reside
         // create a column that the up/down pipes reside, and then set up hitboxes on each
-        let pipePair = SKNode()
+        let pipeColumn = SKNode()
 
         // starting position just off-screen
-        pipePair.position = CGPoint(x: self.frame.size.width + self.pipeUpTexture.size().width, y: 0)
+        pipeColumn.position = CGPoint(x: self.frame.size.width, y: 0)
 
         // z-position
-        pipePair.zPosition = self.pipeZpos
+        pipeColumn.zPosition = self.pipeZpos
 
-        // pipe placement location, y-axis
-        let pipeY = CGFloat(self.frame.size.height / 4)
-
+        // pipe y-axis placement
         // random number for randomness. UInt32 -> Double -> CGFloat for it to work with .position
-        let random = CGFloat(Double(arc4random()))
-
         // random = big number, mod by pipeY for a reasonable number, add pipeY for even-ness
+        let pipeY        = CGFloat(self.frame.size.height / 4)
+        let random       = CGFloat(Double(arc4random()))
         let randomOffset = (random % pipeY) + pipeY
 
+        // set up both pipes
+        let topPipe    = self.generatePipe("top", randomOffset: randomOffset)
+        let bottomPipe = self.generatePipe("bottom", randomOffset: randomOffset)
 
-        // set up pipes!
-        let topPipe = SKSpriteNode(texture: self.pipeDownTexture)
-        topPipe.setScale(2.0)
+        // add pipes to column
+        pipeColumn.addChild(topPipe)
+        pipeColumn.addChild(bottomPipe)
 
-        // set top pipe to top of screen + pipe gap space + random offset
-        topPipe.position = CGPoint(x: 0, y: topPipe.size.height + self.pipeGap + randomOffset)
+        // offset to the right of the pipes, so you actually have to pass the pipes a little to register a score
+        let scoreOffset:CGFloat = self.hero.size.width / 2
 
-        // pipes are rectangular anyway, so use a rectangle hitbox
-        topPipe.physicsBody = SKPhysicsBody(rectangleOfSize: topPipe.size)
+        // set up a contact area for the pipe gap, whose event trigger will increment the score
+        let pipeGap                             = SKNode()
+        pipeGap.position                        = CGPoint(x: topPipe.size.width + scoreOffset, y: CGRectGetMidY(self.frame))
+        pipeGap.physicsBody                     = SKPhysicsBody(rectangleOfSize: CGSize(width: topPipe.size.width, height: self.frame.size.height))
+        pipeGap.physicsBody?.dynamic            = false
+        pipeGap.physicsBody?.categoryBitMask    = self.pipeGapBitMask
+        pipeGap.physicsBody?.contactTestBitMask = self.heroBitMask
 
-        // disable physics forces (gravity pulls the pipe down, lol)
-        topPipe.physicsBody?.dynamic = false
-
-        // set category bitmask
-        topPipe.physicsBody?.categoryBitMask = self.pipeCat
-
-        // set contact bitmask to fire event with dickbutt
-        // TODO: test, if i omit this, the logical AND will = 0 if this and hero's bitmask are different, and event shouldn't fire
-        topPipe.physicsBody?.contactTestBitMask = self.heroCat
-
-        // add top pipe to pipe column
-        pipePair.addChild(topPipe)
+        pipeColumn.addChild(pipeGap)
 
 
-        // do it all again for the bottom pipe
-        let bottomPipe = SKSpriteNode(texture: self.pipeUpTexture)
-        bottomPipe.setScale(2.0)
-
-        // bottom pipe positions already on the bottom of the screen, so just give it the random offset
-        bottomPipe.position                        = CGPoint(x: 0, y: randomOffset)
-        bottomPipe.physicsBody                     = SKPhysicsBody(rectangleOfSize: bottomPipe.size)
-        bottomPipe.physicsBody?.dynamic            = false
-        bottomPipe.physicsBody?.categoryBitMask    = self.pipeCat
-        bottomPipe.physicsBody?.contactTestBitMask = self.heroCat
-        pipePair.addChild(bottomPipe)
-
-        pipePair.runAction(self.pipeNodeAnimation)
-        self.pipesNode.addChild(pipePair)
+        pipeColumn.runAction(self.pipeNodeAnimation)
+        self.pipesNode.addChild(pipeColumn)
     }
 
 
@@ -333,9 +347,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     func didBeginContact(contact: SKPhysicsContact)
     {
         println("contact!")
-        println(contact)
+//        println(contact)
 
         self.environmentNode.speed = 0
+        self.pipesNode.speed = 0
+
+        // TODO: stop gravity so dickbutt pauses where contact was
+
+        // restart game
+        var s = GameScene(size: self.size)
+        s.scaleMode = .AspectFill
+        self.view?.presentScene(s)
     }
 
 
