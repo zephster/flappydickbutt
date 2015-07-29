@@ -43,9 +43,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // node that contains the ground and sky's generated nodes
     var environmentNode = SKNode()
 
-    // ground area, physics collision
-    var groundNode = SKNode()
-
     // node that contains pipes, physics collisions with pipe nodes
     var pipesNode = SKNode()
 
@@ -164,13 +161,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
         // groundNode is the physics body that gets collided with, groundTexHeight = sprite.height/2 (cause of scale)
         // the reason it's this way is because having each sprite have it's own physicsbody would be more work
-        self.groundNode.position = CGPoint(x: 0, y: groundTexHeight)
-        self.groundNode.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: self.frame.size.width, height: groundTexHeight * scale))
-        self.groundNode.physicsBody?.dynamic = false
-        self.groundNode.physicsBody?.categoryBitMask = self.groundBitMask
+        let groundNode = SKNode()
+        groundNode.position = CGPoint(x: 0, y: groundTexHeight)
+        groundNode.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: self.frame.size.width, height: groundTexHeight * scale))
+        groundNode.physicsBody?.dynamic = false
+        groundNode.physicsBody?.categoryBitMask = self.groundBitMask
 
         // scrollNode and groundNode are entirely separate things that just happen to reside in the same coordinate-space (for obv reasons)
-        self.addChild(self.groundNode)
+        self.addChild(groundNode)
         self.addChild(self.environmentNode)
     }
 
