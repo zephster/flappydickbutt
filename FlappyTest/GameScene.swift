@@ -24,10 +24,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // determine which objects are involved in a collision
     // each bitmask is defaulted to either 0x00000000 or 0xFFFFFFFF, obv 32bits
     // so i can have a total of 32 different categories
-    let heroCat: UInt32  = 1 << 0 // 1
-    let pipeCat: UInt32  = 1 << 1 // 2
-    let levelCat: UInt32 = 1 << 2 // 4
-    let scoreCat: UInt32 = 1 << 3 // 8
+    let heroBitMask: UInt32    = 1 << 0
+    let pipeBitMask: UInt32    = 1 << 1
+    let groundBitMask: UInt32  = 1 << 2
+    let pipeGapBitMask: UInt32 = 1 << 3
 
     // gap between top and bottom pipes
     let pipeGap:CGFloat = 150.0
@@ -90,15 +90,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
         // set this value so when collission happens, i can test the "category" property to determine
         // what to do, depending on what object gets hit, defined below
-        hero.physicsBody?.categoryBitMask = self.heroCat
+        hero.physicsBody?.categoryBitMask = self.heroBitMask
 
         // determines which objects hero is capable of colliding and interacting with (bouncing off, etc)
         // don't need | self.pipeCat because upon contacting a pipe, it's event (below) will fire and the game will end
-        hero.physicsBody?.collisionBitMask = self.levelCat
+        hero.physicsBody?.collisionBitMask = self.groundBitMask
 
         // determines which objects send an event when collided with (without collisionBitMask, objects would pass through but still be detected)
         // don't need | self.levelCat because i don't need an event for touching the ground
-        hero.physicsBody?.contactTestBitMask = self.pipeCat
+        hero.physicsBody?.contactTestBitMask = self.pipeBitMask
 
         // add to scene
         self.addChild(hero)
@@ -167,7 +167,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.groundNode.position = CGPoint(x: 0, y: groundTexHeight)
         self.groundNode.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: self.frame.size.width, height: groundTexHeight * scale))
         self.groundNode.physicsBody?.dynamic = false
-        self.groundNode.physicsBody?.categoryBitMask = self.levelCat
+        self.groundNode.physicsBody?.categoryBitMask = self.groundBitMask
 
         // scrollNode and groundNode are entirely separate things that just happen to reside in the same coordinate-space (for obv reasons)
         self.addChild(self.groundNode)
