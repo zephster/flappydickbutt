@@ -24,10 +24,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // determine which objects are involved in a collision
     // each bitmask is defaulted to either 0x00000000 or 0xFFFFFFFF, obv 32bits
     // so i can have a total of 32 different categories
-    let heroBitMask: UInt32    = 1 << 0
-    let pipeBitMask: UInt32    = 1 << 1
-    let groundBitMask: UInt32  = 1 << 2
-    let pipeGapBitMask: UInt32 = 1 << 3
+    let heroBitMask: UInt32    = 1 << 0 // 0b0001
+    let pipeBitMask: UInt32    = 1 << 1 // 0b0010
+    let groundBitMask: UInt32  = 1 << 2 // 0b0100
+    let pipeGapBitMask: UInt32 = 1 << 3 // 0b1000
 
     // gap between top and bottom pipes
     let pipeGap:CGFloat = 150.0
@@ -46,7 +46,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // ground area, physics collision
     var groundNode = SKNode()
 
-    // vertical area for pipes, physics collisions with pipe nodes
+    // node that contains pipes, physics collisions with pipe nodes
     var pipesNode = SKNode()
 
     // action that moves the pipes, then removes once off-screen
@@ -347,17 +347,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     func didBeginContact(contact: SKPhysicsContact)
     {
         println("contact!")
-//        println(contact)
 
-        self.environmentNode.speed = 0
-        self.pipesNode.speed = 0
+        // bitwise OR the two contacting bodies, then compare
+        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
 
-        // TODO: stop gravity so dickbutt pauses where contact was
+        // i don't care which object hit which, as long as both dickbutt and the scoring gap are the bodies.
+        // otherwise, i'd have to do a secondary check to disambiguate which body is which
+        if contactMask == self.heroBitMask | self.pipeGapBitMask
+        {
+            println("SCORE!")
+        }
+        else
+        {
+            println("GAME OVER!")
+            self.view?.scene!.paused = true
+        }
 
         // restart game
-        var s = GameScene(size: self.size)
-        s.scaleMode = .AspectFill
-        self.view?.presentScene(s)
+//        var s = GameScene(size: self.size)
+//        s.scaleMode = .AspectFill
+//        self.view?.presentScene(s)
     }
 
 
