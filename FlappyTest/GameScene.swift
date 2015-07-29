@@ -10,6 +10,8 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate
 {
+    var score:Int = 0
+
     // just define the textures, they are added to SKSpriteNodes when the object is created
     let heroTexture     = SKTexture(imageNamed: "dickbutt")
     let skyTexture      = SKTexture(imageNamed: "sky")
@@ -344,27 +346,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
     func didBeginContact(contact: SKPhysicsContact)
     {
-        println("contact!")
-
         // bitwise OR the two contacting bodies, then compare
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
 
-        // i don't care which object hit which, as long as both dickbutt and the scoring gap are the bodies.
-        // otherwise, i'd have to do a secondary check to disambiguate which body is which
+        // check if the two bodies are hero and pipeGap (increment score)
         if contactMask == self.heroBitMask | self.pipeGapBitMask
         {
-            println("SCORE!")
-        }
-        else
-        {
-            println("GAME OVER!")
-            self.view?.scene!.paused = true
-        }
+            self.score++
+            self.log("score: \(self.score)")
 
-        // restart game
-//        var s = GameScene(size: self.size)
-//        s.scaleMode = .AspectFill
-//        self.view?.presentScene(s)
+            // remove the bitmask on this pipe node, to prevent multiple triggers
+            contact.bodyB.categoryBitMask = 0
+        }
+        // check if the two bodies are hero and pipe (game over)
+        else if contactMask == self.heroBitMask | self.pipeBitMask
+        {
+            self.log("GAME OVER!")
+
+            // pause the game
+            self.view?.scene!.paused = true
+
+            // TODO: do this elsewhere
+            // restart game
+//            var s = GameScene(size: self.size)
+//            s.scaleMode = .AspectFill
+//            self.view?.presentScene(s)
+        }
     }
 
 
