@@ -77,9 +77,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
 
 
-    // TODO: remove collision from pipe so it passes through, still want the event though
-    // cause when they touch, the game will stop anyway
-
     // TODO: prevent dickbutt from going off-screen (top)
     func setupHero() -> SKSpriteNode
     {
@@ -96,10 +93,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         hero.physicsBody?.categoryBitMask = self.heroCat
 
         // determines which objects hero is capable of colliding and interacting with (bouncing off, etc)
-        hero.physicsBody?.collisionBitMask = self.pipeCat | self.levelCat
+        // don't need | self.pipeCat because upon contacting a pipe, it's event (below) will fire and the game will end
+        hero.physicsBody?.collisionBitMask = self.levelCat
 
         // determines which objects send an event when collided with (without collisionBitMask, objects would pass through but still be detected)
-        hero.physicsBody?.contactTestBitMask = self.pipeCat | self.levelCat
+        // don't need | self.levelCat because i don't need an event for touching the ground
+        hero.physicsBody?.contactTestBitMask = self.pipeCat
 
         // add to scene
         self.addChild(hero)
@@ -161,6 +160,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         }
 
         // groundNode is the physics body that gets collided with, groundTexHeight = sprite.height/2 (cause of scale)
+        // the reason it's this way is because having each sprite have it's own physicsbody would be more work
         self.groundNode.position = CGPoint(x: 0, y: groundTexHeight)
         self.groundNode.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: self.frame.size.width, height: groundTexHeight * scale))
         self.groundNode.physicsBody?.dynamic = false
