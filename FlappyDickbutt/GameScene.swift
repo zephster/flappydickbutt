@@ -52,7 +52,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var pipeNodeAnimation: SKAction!
 
     // UI stuff
-    let scoreLabel = SKLabelNode(text: "0")
+    let scoreLabel  = SKLabelNode(text: "0")
+    let startButton = SKLabelNode(text: "start")
     let retryButton = SKLabelNode(text: "retry")
 
 
@@ -60,29 +61,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // scene just loaded
     override func didMoveToView(view: SKView)
     {
-        self.backgroundColor = self.skyColor
-
         // set world physics
-        // x, positive = right, negative = left
-        // y, positive = up, negative = down
-        self.physicsWorld.gravity         = CGVector(dx: 0, dy: -8)
+        // self.physicsWorld.gravity = CGVector(dx: 0, dy: -8) // defaults to -9.8 (earth)
         self.physicsWorld.contactDelegate = self
 
         self.heroTexture.filteringMode   = SKTextureFilteringMode.Linear
         self.skyTexture.filteringMode    = SKTextureFilteringMode.Nearest
         self.groundTexture.filteringMode = SKTextureFilteringMode.Nearest
 
-        self.hero = self.setupDickbutt()
+        // set up the ground and background before game starts
+        // so the scene isn't blank
+        self.backgroundColor = self.skyColor
         self.setupGround()
         self.setupBackground()
-        self.setupPipes()
 
         // score label
         self.scoreLabel.fontSize  = 100
         self.scoreLabel.fontColor = UIColor.whiteColor()
         self.scoreLabel.position  = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 10)
-        self.addChild(self.scoreLabel)
 
+        // start button
+        self.startButton.fontSize  = 100
+        self.startButton.fontColor = UIColor.blackColor()
+        self.startButton.position  = CGPoint(x: CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame) + 125)
+        self.addChild(self.startButton)
 
         // retry button
         self.retryButton.fontSize  = 50
@@ -94,11 +96,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // handle touch inputs
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent)
     {
-        // because it's falling, it has velocity. change it to 0
-        self.hero.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        if let dickbutt = self.hero
+        {
+            // because it's falling, it has velocity. change it to 0
+            dickbutt.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
 
-        // then apply a force upwards
-        self.hero.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 25))
+            // then apply a force upwards
+            dickbutt.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 25))
+        }
 
         for touch: AnyObject in touches
         {
@@ -110,9 +115,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             {
                 self.gameRestart()
             }
-
-            // if it's in the start button
-            // TODO: start button
+            // don't check bounds on start button; let whole screen be the start button
+            else if self.startButton.parent != nil
+            {
+                self.gameStart()
+            }
         }
     }
 
@@ -252,7 +259,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let skySequence  = SKAction.sequence([moveSky, resetSky])
         let skyAnimation = SKAction.repeatActionForever(skySequence)
 
-        self.log("setupSkyLine: skyTextureSize: \(skyTextureSize)")
+        self.log("setupBackground: skyTextureSize: \(skyTextureSize)")
 
         for var i:CGFloat = 0; i <= scale; i++
         {
@@ -263,7 +270,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             let spriteX = i * sprite.size.width
             let spriteY = (sprite.size.height * scale) - self.groundTexture.size().height
 
-            self.log("setupSkyLine: sprite x,y: \(spriteX), \(spriteY)")
+            self.log("setupBackground: sprite x,y: \(spriteX), \(spriteY)")
 
             sprite.position  = CGPoint(x: spriteX, y: spriteY)
 
@@ -403,6 +410,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
 
     // game functions
+    private func gameStart()
+    {
+        self.hero = self.setupDickbutt()
+        self.setupPipes()
+        self.addChild(self.scoreLabel)
+
+        self.startButton.removeFromParent()
+        self.log("game start")
+    }
+
     private func gameOver()
     {
         self.view?.scene!.paused = true
