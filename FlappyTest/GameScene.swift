@@ -57,7 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
 
 
-    // setup
+    // scene just loaded
     override func didMoveToView(view: SKView)
     {
         self.backgroundColor = self.skyColor
@@ -72,9 +72,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.skyTexture.filteringMode    = SKTextureFilteringMode.Nearest
         self.groundTexture.filteringMode = SKTextureFilteringMode.Nearest
 
-        self.hero = self.setupHero()
+        self.hero = self.setupDickbutt()
         self.setupGround()
-        self.setupSkyLine()
+        self.setupBackground()
         self.setupPipes()
 
         // score label
@@ -91,9 +91,59 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.retryButton.position  = CGPoint(x: (self.frame.size.width / 2) + 125, y: self.frame.size.height / 8.5)
     }
 
+    // handle touch inputs
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent)
+    {
+        // because it's falling, it has velocity. change it to 0
+        self.hero.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
 
+        // then apply a force upwards
+        self.hero.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 25))
+
+        for touch: AnyObject in touches
+        {
+            let touchLocation = touch.locationInNode(self)
+
+            // if the touch location is within the bounds of the retry button
+            if self.retryButton.containsPoint(touchLocation)
+            {
+                self.gameRestart()
+            }
+
+            // if it's in the start button
+            // TODO: start button
+        }
+    }
+
+    // collision detection
+    func didBeginContact(contact: SKPhysicsContact)
+    {
+        // bitwise OR the two contacting bodies, then compare
+        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+
+        // check if the two bodies are hero and pipeGap (increment score)
+        if contactMask == self.heroBitMask | self.pipeGapBitMask
+        {
+            self.incrementScore()
+
+            // remove the bitmask on this pipe node, to prevent multiple triggers
+            contact.bodyB.categoryBitMask = 0
+        }
+            // check if the two bodies are hero and pipe (game over)
+        else if contactMask == self.heroBitMask | self.pipeBitMask
+        {
+            // if retry button isn't on the screen already (also prevents multiple triggers)
+            if self.retryButton.parent == nil
+            {
+                self.gameOver()
+            }
+        }
+    }
+
+
+    // dickbutt setup
     // TODO: prevent dickbutt from going off-screen (top)
-    func setupHero() -> SKSpriteNode
+    func setupDickbutt() -> SKSpriteNode
     {
         let hero      = SKSpriteNode(texture: self.heroTexture)
         hero.position = CGPoint(x: self.frame.size.width * 0.33, y: self.frame.size.height * 0.75)
@@ -120,9 +170,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         return hero
     }
 
-
-
-
+    // ground setup
     func setupGround()
     {
         let groundTexSize   = self.groundTexture.size()
@@ -190,9 +238,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.addChild(self.environmentNode)
     }
 
-
-
-    func setupSkyLine()
+    // background setup
+    func setupBackground()
     {
         let skyTextureSize  = self.skyTexture.size()
         let skyTextureWidth = skyTextureSize.width
@@ -227,38 +274,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         }
     }
 
-
-
-    private func generatePipe(placement: String, randomOffset offset: CGFloat) -> SKSpriteNode
+    // pipes setup
+    func setupPipes()
     {
-        let texture: SKTexture = (placement == "top")
-                                ? self.pipeDownTexture
-                                : self.pipeUpTexture
+        // first, set up the pipe animations themselves
+        // set to a class property so it can be used by the pipe objects,
+        // it's only configured (once) here, instead of every spawn (that'd be dumb)
+        self.pipeNodeAnimation = self.setupPipeNodeAnimation()
 
-        let pipe = SKSpriteNode(texture: texture)
+        // now, set up the constant spawning of the pipes
+        // time between pipes
+        let pipeInterval = NSTimeInterval(2)
+        let delay        = SKAction.waitForDuration(pipeInterval)
 
-        // shit images
-        pipe.setScale(2.0)
-        let position:CGPoint = (placement == "top")
-                                ? CGPoint(x: 0, y: pipe.size.height + self.pipeGap + offset)
-                                : CGPoint(x: 0, y: offset)
+        // the action of spawning the pipe
+        let spawn = SKAction.runBlock({
+            self.spawnPipes()
+        })
 
-        // set top pipe to top of screen + pipe gap space + random offset
-        pipe.position = position
+        // sequence of: spawn a pipe, then delay (until it gets called again)
+        let pipeSequence = SKAction.sequence([spawn, delay])
 
-        // pipes are rectangular anyway, so use a rectangle hitbox
-        pipe.physicsBody = SKPhysicsBody(rectangleOfSize: pipe.size)
+        // do the above forever
+        let pipeSpawn = SKAction.repeatActionForever(pipeSequence)
 
-        // disable physics forces (gravity pulls the pipe down, lol)
-        pipe.physicsBody?.dynamic = false
+        // start the spawning!
+        self.runAction(pipeSpawn)
 
-        // set category bitmask
-        pipe.physicsBody?.categoryBitMask = self.pipeBitMask
-
-        return pipe
+        // finally, add the pipeNodes, which will hold all the pipe objects
+        self.addChild(self.pipesNode)
     }
 
-
+    // spawn a pair of pipes
     func spawnPipes()
     {
         // node for the up and down pipe to reside
@@ -305,41 +352,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
 
 
-    // this is called once, spawnPipes is called at an interval
-    // this creates 2 actions:
-    //      one that spawns and delays (repeated forever)
-    //      one that moves the pipe from right to left off-screen, then removes it
-    func setupPipes()
+    // generate a pipe
+    private func generatePipe(placement: String, randomOffset offset: CGFloat) -> SKSpriteNode
     {
-        // first, set up the pipe animations themselves
-        // set to a class property so it can be used by the pipe objects,
-        // it's only configured (once) here, instead of every spawn (that'd be dumb)
-        self.pipeNodeAnimation = self.setupPipeNodeAnimation()
+        let texture: SKTexture = (placement == "top")
+                                ? self.pipeDownTexture
+                                : self.pipeUpTexture
 
-        // now, set up the constant spawning of the pipes
-        // time between pipes
-        let pipeInterval = NSTimeInterval(2)
-        let delay        = SKAction.waitForDuration(pipeInterval)
+        let pipe = SKSpriteNode(texture: texture)
 
-        // the action of spawning the pipe
-        let spawn = SKAction.runBlock({
-            self.spawnPipes()
-        })
+        // shit images
+        pipe.setScale(2.0)
+        let position:CGPoint = (placement == "top")
+                                ? CGPoint(x: 0, y: pipe.size.height + self.pipeGap + offset)
+                                : CGPoint(x: 0, y: offset)
 
-        // sequence of: spawn a pipe, then delay (until it gets called again)
-        let pipeSequence = SKAction.sequence([spawn, delay])
+        // set top pipe to top of screen + pipe gap space + random offset
+        pipe.position = position
 
-        // do the above forever
-        let pipeSpawn = SKAction.repeatActionForever(pipeSequence)
+        // pipes are rectangular anyway, so use a rectangle hitbox
+        pipe.physicsBody = SKPhysicsBody(rectangleOfSize: pipe.size)
 
-        // start the spawning!
-        self.runAction(pipeSpawn)
+        // disable physics forces (gravity pulls the pipe down, lol)
+        pipe.physicsBody?.dynamic = false
 
-        // finally, add the pipeNodes, which will hold all the pipe objects
-        self.addChild(self.pipesNode)
+        // set category bitmask
+        pipe.physicsBody?.categoryBitMask = self.pipeBitMask
+
+        return pipe
     }
 
-
+    // configure the animation of pipes across the screen
     private func setupPipeNodeAnimation() -> SKAction
     {
         // distance to move the pipe all the way to the left (frame width) + it's own size, so it's all off-screen
@@ -358,40 +401,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
 
 
-
-
-    func didBeginContact(contact: SKPhysicsContact)
-    {
-        // bitwise OR the two contacting bodies, then compare
-        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-
-        // check if the two bodies are hero and pipeGap (increment score)
-        if contactMask == self.heroBitMask | self.pipeGapBitMask
-        {
-            self.incrementScore()
-
-            // remove the bitmask on this pipe node, to prevent multiple triggers
-            contact.bodyB.categoryBitMask = 0
-        }
-        // check if the two bodies are hero and pipe (game over)
-        else if contactMask == self.heroBitMask | self.pipeBitMask
-        {
-            // if retry button isn't on the screen already (also prevents multiple triggers)
-            if self.retryButton.parent == nil
-            {
-                self.gameOver()
-            }
-        }
-    }
-
-
-    private func incrementScore()
-    {
-        self.score++
-        self.scoreLabel.text = "\(self.score)"
-        self.log("score: \(self.score)")
-    }
-
+    // game functions
     private func gameOver()
     {
         self.view?.scene!.paused = true
@@ -399,7 +409,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.log("game over, idiot")
     }
 
-    private func restartGame()
+    private func gameRestart()
     {
         // reset score
         self.score           = 0
@@ -413,6 +423,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.log("restarting game")
     }
 
+    private func incrementScore()
+    {
+        self.score++
+        self.scoreLabel.text = "\(self.score)"
+        self.log("score: \(self.score)")
+    }
+
 
 
     private func log(message: String)
@@ -420,34 +437,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         #if DEBUG
             println(message)
         #endif
-    }
-
-    // touch me
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent)
-    {
-        // because it's falling, it has velocity. change it to 0
-        self.hero.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-
-        // then apply a force upwards
-        self.hero.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 25))
-
-        for touch: AnyObject in touches
-        {
-            let touchLocation = touch.locationInNode(self)
-
-            // if the touch location is within the bounds of the retry button
-            if self.retryButton.containsPoint(touchLocation)
-            {
-                self.restartGame()
-            }
-
-            // if it's in the start button
-            // TODO: start button
-        }
-    }
-
-    override func update(currentTime: CFTimeInterval)
-    {
-        /* Called before each frame is rendered */
     }
 }
