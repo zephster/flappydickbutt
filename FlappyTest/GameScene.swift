@@ -51,6 +51,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     // action that moves the pipes, then removes once off-screen
     var pipeNodeAnimation: SKAction!
 
+    // UI stuff
+    let scoreLabel = SKLabelNode(text: "0")
+    let retryButton = SKLabelNode(text: "retry")
 
 
 
@@ -73,6 +76,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.setupGround()
         self.setupSkyLine()
         self.setupPipes()
+
+        // score label
+        self.scoreLabel.fontSize  = 100
+        self.scoreLabel.fontColor = UIColor.whiteColor()
+        self.scoreLabel.position  = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 10)
+        self.addChild(self.scoreLabel)
+
+
+        // retry button
+        self.retryButton.fontSize  = 50
+        self.retryButton.name      = "retryButton"
+        self.retryButton.fontColor = UIColor.redColor()
+        self.retryButton.position  = CGPoint(x: (self.frame.size.width / 2) + 125, y: self.frame.size.height / 8.5)
     }
 
 
@@ -352,8 +368,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         // check if the two bodies are hero and pipeGap (increment score)
         if contactMask == self.heroBitMask | self.pipeGapBitMask
         {
-            self.score++
-            self.log("score: \(self.score)")
+            self.incrementScore()
 
             // remove the bitmask on this pipe node, to prevent multiple triggers
             contact.bodyB.categoryBitMask = 0
@@ -361,18 +376,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         // check if the two bodies are hero and pipe (game over)
         else if contactMask == self.heroBitMask | self.pipeBitMask
         {
-            self.log("GAME OVER!")
-
-            // pause the game
-            self.view?.scene!.paused = true
-
-            // TODO: do this elsewhere
-            // restart game
-//            var s = GameScene(size: self.size)
-//            s.scaleMode = .AspectFill
-//            self.view?.presentScene(s)
+            // if retry button isn't on the screen already (also prevents multiple triggers)
+            if self.retryButton.parent == nil
+            {
+                self.gameOver()
+            }
         }
     }
+
+
+    private func incrementScore()
+    {
+        self.score++
+        self.scoreLabel.text = "\(self.score)"
+        self.log("score: \(self.score)")
+    }
+
+    private func gameOver()
+    {
+        self.view?.scene!.paused = true
+        self.addChild(self.retryButton)
+        self.log("game over, idiot")
+    }
+
+    private func restartGame()
+    {
+        // reset score
+        self.score           = 0
+        self.scoreLabel.text = "\(self.score)"
+
+        // re-present the scene. i don't know if this is the best way to do this, though.
+        let game       = GameScene(size: self.size)
+        game.scaleMode = .AspectFill
+
+        self.view?.presentScene(game)
+        self.log("restarting game")
+    }
+
 
 
     private func log(message: String)
@@ -390,9 +430,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
         // then apply a force upwards
         self.hero.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 25))
+
+        for touch: AnyObject in touches
+        {
+            let touchLocation = touch.locationInNode(self)
+
+            // if the touch location is within the bounds of the retry button
+            if self.retryButton.containsPoint(touchLocation)
+            {
+                self.restartGame()
+            }
+
+            // if it's in the start button
+            // TODO: start button
+        }
     }
-   
-    override func update(currentTime: CFTimeInterval) {
+
+    override func update(currentTime: CFTimeInterval)
+    {
         /* Called before each frame is rendered */
     }
 }
