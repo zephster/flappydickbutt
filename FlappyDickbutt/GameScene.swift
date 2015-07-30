@@ -39,6 +39,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     let skyZpos:CGFloat    = -2
     let pipeZpos:CGFloat   = -1
 
+    // animation times
+    // ground and pipe move at about the same relative rate
+    let groundMoveTime = NSTimeInterval(4.75)
+    let pipeMoveTime   = NSTimeInterval(7.50)
+    let pipeInterval   = NSTimeInterval(2.0)
+
     // dickbutt!
     var hero: SKSpriteNode!
 
@@ -193,11 +199,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let scale:CGFloat = 2.0
 
         // define animations!
-        // lower number = faster interval (duh)
-        let groundMoveTime = NSTimeInterval(6.75)
-
         // move ground to the left (negative x-axis) on a timer, defined above
-        let moveGround = SKAction.moveByX(-groundTexWidth * scale, y: 0, duration: groundMoveTime)
+        let moveGround = SKAction.moveByX(-groundTexWidth * scale, y: 0, duration: self.groundMoveTime)
 
         // reset ground so it looks like its continuous
         let resetGround = SKAction.moveByX(groundTexWidth * scale, y: 0, duration: 0.0)
@@ -291,9 +294,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.pipeNodeAnimation = self.setupPipeNodeAnimation()
 
         // now, set up the constant spawning of the pipes
-        // time between pipes
-        let pipeInterval = NSTimeInterval(2)
-        let delay        = SKAction.waitForDuration(pipeInterval)
+        let delay = SKAction.waitForDuration(self.pipeInterval)
 
         // the action of spawning the pipe
         let spawn = SKAction.runBlock({
@@ -396,12 +397,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         // distance to move the pipe all the way to the left (frame width) + it's own size, so it's all off-screen
         let distanceToMove = CGFloat(self.frame.size.width + self.pipeUpTexture.size().width)
 
-        // how fast it moves
-        // set to 10 to match ground's 6.5 (texture width causes the difference)
-        let pipeMoveTime = NSTimeInterval(7.50)
-
         // actions to move the pipe, and remove the pipe (after it goes off-screen)
-        let movePipes   = SKAction.moveByX(-distanceToMove, y:0, duration:pipeMoveTime)
+        let movePipes   = SKAction.moveByX(-distanceToMove, y:0, duration:self.pipeMoveTime)
         let removePipes = SKAction.removeFromParent()
 
         // sequence of moving, removing pipes.
