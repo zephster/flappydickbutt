@@ -105,7 +105,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             let touchLocation = touch.locationInNode(self)
 
             // if the touch location is within the bounds of the retry button
-            if self.retryButton.containsPoint(touchLocation)
+            if self.retryButton.containsPoint(touchLocation) &&
+               self.retryButton.parent != nil
             {
                 self.gameRestart()
             }
