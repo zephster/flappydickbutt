@@ -14,7 +14,7 @@
 		CAA468A51B66EB4E003DC0EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAA468A31B66EB4E003DC0EE /* Main.storyboard */; };
 		CAA468A71B66EB4E003DC0EE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAA468A61B66EB4E003DC0EE /* Images.xcassets */; };
 		CAA468AA1B66EB4E003DC0EE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAA468A81B66EB4E003DC0EE /* LaunchScreen.xib */; };
-		CAA468B61B66EB4F003DC0EE /* FlappyTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA468B51B66EB4F003DC0EE /* FlappyTestTests.swift */; };
+		CAA468B61B66EB4F003DC0EE /* FlappyDickbuttTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA468B51B66EB4F003DC0EE /* FlappyDickbuttTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,12 +23,12 @@
 			containerPortal = CAA4688E1B66EB4E003DC0EE /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CAA468951B66EB4E003DC0EE;
-			remoteInfo = FlappyTest;
+			remoteInfo = FlappyDickbutt;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CAA468961B66EB4E003DC0EE /* FlappyTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CAA468961B66EB4E003DC0EE /* FlappyDickbutt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyDickbutt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA4689A1B66EB4E003DC0EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CAA4689B1B66EB4E003DC0EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CAA4689D1B66EB4E003DC0EE /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -37,9 +37,9 @@
 		CAA468A41B66EB4E003DC0EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CAA468A61B66EB4E003DC0EE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		CAA468A91B66EB4E003DC0EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		CAA468AF1B66EB4F003DC0EE /* FlappyTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlappyTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CAA468AF1B66EB4F003DC0EE /* FlappyDickbuttTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlappyDickbuttTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA468B41B66EB4F003DC0EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CAA468B51B66EB4F003DC0EE /* FlappyTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlappyTestTests.swift; sourceTree = "<group>"; };
+		CAA468B51B66EB4F003DC0EE /* FlappyDickbuttTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlappyDickbuttTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,8 +63,8 @@
 		CAA4688D1B66EB4E003DC0EE = {
 			isa = PBXGroup;
 			children = (
-				CAA468981B66EB4E003DC0EE /* FlappyTest */,
-				CAA468B21B66EB4F003DC0EE /* FlappyTestTests */,
+				CAA468981B66EB4E003DC0EE /* FlappyDickbutt */,
+				CAA468B21B66EB4F003DC0EE /* FlappyDickbuttTests */,
 				CAA468971B66EB4E003DC0EE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,13 +72,13 @@
 		CAA468971B66EB4E003DC0EE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CAA468961B66EB4E003DC0EE /* FlappyTest.app */,
-				CAA468AF1B66EB4F003DC0EE /* FlappyTestTests.xctest */,
+				CAA468961B66EB4E003DC0EE /* FlappyDickbutt.app */,
+				CAA468AF1B66EB4F003DC0EE /* FlappyDickbuttTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		CAA468981B66EB4E003DC0EE /* FlappyTest */ = {
+		CAA468981B66EB4E003DC0EE /* FlappyDickbutt */ = {
 			isa = PBXGroup;
 			children = (
 				CAA4689B1B66EB4E003DC0EE /* AppDelegate.swift */,
@@ -90,7 +90,8 @@
 				CAA468A81B66EB4E003DC0EE /* LaunchScreen.xib */,
 				CAA468991B66EB4E003DC0EE /* Supporting Files */,
 			);
-			path = FlappyTest;
+			name = FlappyDickbutt;
+			path = FlappyDickbutt;
 			sourceTree = "<group>";
 		};
 		CAA468991B66EB4E003DC0EE /* Supporting Files */ = {
@@ -101,13 +102,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		CAA468B21B66EB4F003DC0EE /* FlappyTestTests */ = {
+		CAA468B21B66EB4F003DC0EE /* FlappyDickbuttTests */ = {
 			isa = PBXGroup;
 			children = (
-				CAA468B51B66EB4F003DC0EE /* FlappyTestTests.swift */,
+				CAA468B51B66EB4F003DC0EE /* FlappyDickbuttTests.swift */,
 				CAA468B31B66EB4F003DC0EE /* Supporting Files */,
 			);
-			path = FlappyTestTests;
+			name = FlappyDickbuttTests;
+			path = FlappyDickbuttTests;
 			sourceTree = "<group>";
 		};
 		CAA468B31B66EB4F003DC0EE /* Supporting Files */ = {
@@ -121,9 +123,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CAA468951B66EB4E003DC0EE /* FlappyTest */ = {
+		CAA468951B66EB4E003DC0EE /* FlappyDickbutt */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CAA468B91B66EB4F003DC0EE /* Build configuration list for PBXNativeTarget "FlappyTest" */;
+			buildConfigurationList = CAA468B91B66EB4F003DC0EE /* Build configuration list for PBXNativeTarget "FlappyDickbutt" */;
 			buildPhases = (
 				CAA468921B66EB4E003DC0EE /* Sources */,
 				CAA468931B66EB4E003DC0EE /* Frameworks */,
@@ -133,14 +135,14 @@
 			);
 			dependencies = (
 			);
-			name = FlappyTest;
-			productName = FlappyTest;
-			productReference = CAA468961B66EB4E003DC0EE /* FlappyTest.app */;
+			name = FlappyDickbutt;
+			productName = FlappyDickbutt;
+			productReference = CAA468961B66EB4E003DC0EE /* FlappyDickbutt.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CAA468AE1B66EB4F003DC0EE /* FlappyTestTests */ = {
+		CAA468AE1B66EB4F003DC0EE /* FlappyDickbuttTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CAA468BC1B66EB4F003DC0EE /* Build configuration list for PBXNativeTarget "FlappyTestTests" */;
+			buildConfigurationList = CAA468BC1B66EB4F003DC0EE /* Build configuration list for PBXNativeTarget "FlappyDickbuttTests" */;
 			buildPhases = (
 				CAA468AB1B66EB4F003DC0EE /* Sources */,
 				CAA468AC1B66EB4F003DC0EE /* Frameworks */,
@@ -151,9 +153,9 @@
 			dependencies = (
 				CAA468B11B66EB4F003DC0EE /* PBXTargetDependency */,
 			);
-			name = FlappyTestTests;
-			productName = FlappyTestTests;
-			productReference = CAA468AF1B66EB4F003DC0EE /* FlappyTestTests.xctest */;
+			name = FlappyDickbuttTests;
+			productName = FlappyDickbuttTests;
+			productReference = CAA468AF1B66EB4F003DC0EE /* FlappyDickbuttTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -174,7 +176,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CAA468911B66EB4E003DC0EE /* Build configuration list for PBXProject "FlappyTest" */;
+			buildConfigurationList = CAA468911B66EB4E003DC0EE /* Build configuration list for PBXProject "FlappyDickbutt" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -187,8 +189,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CAA468951B66EB4E003DC0EE /* FlappyTest */,
-				CAA468AE1B66EB4F003DC0EE /* FlappyTestTests */,
+				CAA468951B66EB4E003DC0EE /* FlappyDickbutt */,
+				CAA468AE1B66EB4F003DC0EE /* FlappyDickbuttTests */,
 			);
 		};
 /* End PBXProject section */
@@ -229,7 +231,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CAA468B61B66EB4F003DC0EE /* FlappyTestTests.swift in Sources */,
+				CAA468B61B66EB4F003DC0EE /* FlappyDickbuttTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,7 +240,7 @@
 /* Begin PBXTargetDependency section */
 		CAA468B11B66EB4F003DC0EE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CAA468951B66EB4E003DC0EE /* FlappyTest */;
+			target = CAA468951B66EB4E003DC0EE /* FlappyDickbutt */;
 			targetProxy = CAA468B01B66EB4F003DC0EE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -350,10 +352,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = FlappyTest/Info.plist;
+				INFOPLIST_FILE = FlappyDickbutt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FlappyDickbutt;
 			};
 			name = Debug;
 		};
@@ -361,10 +363,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = FlappyTest/Info.plist;
+				INFOPLIST_FILE = FlappyDickbutt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FlappyDickbutt;
 			};
 			name = Release;
 		};
@@ -380,10 +382,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = FlappyTestTests/Info.plist;
+				INFOPLIST_FILE = FlappyDickbuttTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlappyTest.app/FlappyTest";
+				PRODUCT_NAME = FlappyDickbuttTests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlappyDickbutt.app/FlappyDickbutt";
 			};
 			name = Debug;
 		};
@@ -395,17 +397,17 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = FlappyTestTests/Info.plist;
+				INFOPLIST_FILE = FlappyDickbuttTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlappyTest.app/FlappyTest";
+				PRODUCT_NAME = FlappyDickbuttTests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlappyDickbutt.app/FlappyDickbutt";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CAA468911B66EB4E003DC0EE /* Build configuration list for PBXProject "FlappyTest" */ = {
+		CAA468911B66EB4E003DC0EE /* Build configuration list for PBXProject "FlappyDickbutt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CAA468B71B66EB4F003DC0EE /* Debug */,
@@ -414,7 +416,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CAA468B91B66EB4F003DC0EE /* Build configuration list for PBXNativeTarget "FlappyTest" */ = {
+		CAA468B91B66EB4F003DC0EE /* Build configuration list for PBXNativeTarget "FlappyDickbutt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CAA468BA1B66EB4F003DC0EE /* Debug */,
@@ -423,7 +425,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CAA468BC1B66EB4F003DC0EE /* Build configuration list for PBXNativeTarget "FlappyTestTests" */ = {
+		CAA468BC1B66EB4F003DC0EE /* Build configuration list for PBXNativeTarget "FlappyDickbuttTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CAA468BD1B66EB4F003DC0EE /* Debug */,
