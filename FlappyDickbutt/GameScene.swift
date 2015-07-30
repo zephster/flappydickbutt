@@ -32,7 +32,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     let pipeGapBitMask: UInt32 = 1 << 3 // 0b1000
 
     // gap between top and bottom pipes
-    let pipeGap:CGFloat = 150.0
+    let pipeGap:CGFloat = 125.0
 
     // z-indexes of stuff
     let groundZpos:CGFloat = 0
