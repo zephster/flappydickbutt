@@ -93,10 +93,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.addChild(self.startButton)
 
         // retry button
-        self.retryButton.fontSize  = 50
+        self.retryButton.fontSize  = 100
         self.retryButton.name      = "retryButton"
         self.retryButton.fontColor = UIColor.redColor()
-        self.retryButton.position  = CGPoint(x: (self.frame.size.width / 2) + 125, y: self.frame.size.height / 8.5)
+        self.retryButton.position  = CGPoint(x: CGRectGetMidX(self.frame), y: CGRectGetMidY(self.frame) + 125)
     }
 
     // handle touch inputs
