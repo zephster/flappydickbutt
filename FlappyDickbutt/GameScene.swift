@@ -417,7 +417,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
 
     private func gameOver()
     {
-        self.view?.scene!.paused = true
+        self.scene!.view!.paused = true
         self.addChild(self.retryButton)
         self.log("game over, idiot")
     }
@@ -431,6 +431,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         // re-present the scene. i don't know if this is the best way to do this, though.
         let game       = GameScene(size: self.size)
         game.scaleMode = .AspectFill
+
+        self.scene!.view!.paused = false
 
         self.view?.presentScene(game)
         self.log("restarting game")
