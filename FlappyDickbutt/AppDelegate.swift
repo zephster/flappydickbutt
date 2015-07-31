@@ -14,8 +14,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool
+    {
         // Override point for customization after application launch.
+
+        let icon       = UIImage(named: "dickbutt")
+        let color      = UIColor(red:0, green:1, blue:1, alpha:1)
+        let splashView = CBZSplashView(icon: icon, backgroundColor: color)
+
+        self.window?.rootViewController!.view.addSubview(splashView)
+        splashView.startAnimation()
+
         return true
     }
 

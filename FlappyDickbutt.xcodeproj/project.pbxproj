@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA4C85DE1B6BC3F8007A0387 /* CBZRasterSplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4C85D91B6BC3F8007A0387 /* CBZRasterSplashView.m */; };
+		CA4C85DF1B6BC3F8007A0387 /* CBZSplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4C85DB1B6BC3F8007A0387 /* CBZSplashView.m */; };
+		CA4C85E01B6BC3F8007A0387 /* CBZVectorSplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4C85DD1B6BC3F8007A0387 /* CBZVectorSplashView.m */; };
 		CAA4689C1B66EB4E003DC0EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA4689B1B66EB4E003DC0EE /* AppDelegate.swift */; };
 		CAA4689E1B66EB4E003DC0EE /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = CAA4689D1B66EB4E003DC0EE /* GameScene.sks */; };
 		CAA468A01B66EB4E003DC0EE /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA4689F1B66EB4E003DC0EE /* GameScene.swift */; };
@@ -28,6 +31,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA4C85C51B6BC352007A0387 /* FlappyDickbutt-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlappyDickbutt-Bridging-Header.h"; sourceTree = "<group>"; };
+		CA4C85D81B6BC3F8007A0387 /* CBZRasterSplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBZRasterSplashView.h; sourceTree = "<group>"; };
+		CA4C85D91B6BC3F8007A0387 /* CBZRasterSplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBZRasterSplashView.m; sourceTree = "<group>"; };
+		CA4C85DA1B6BC3F8007A0387 /* CBZSplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBZSplashView.h; sourceTree = "<group>"; };
+		CA4C85DB1B6BC3F8007A0387 /* CBZSplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBZSplashView.m; sourceTree = "<group>"; };
+		CA4C85DC1B6BC3F8007A0387 /* CBZVectorSplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBZVectorSplashView.h; sourceTree = "<group>"; };
+		CA4C85DD1B6BC3F8007A0387 /* CBZVectorSplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBZVectorSplashView.m; sourceTree = "<group>"; };
 		CAA468961B66EB4E003DC0EE /* FlappyDickbutt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyDickbutt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA4689A1B66EB4E003DC0EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CAA4689B1B66EB4E003DC0EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -60,6 +70,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CA4C85BB1B6BC318007A0387 /* CBZSplashView */ = {
+			isa = PBXGroup;
+			children = (
+				CA4C85D81B6BC3F8007A0387 /* CBZRasterSplashView.h */,
+				CA4C85D91B6BC3F8007A0387 /* CBZRasterSplashView.m */,
+				CA4C85DA1B6BC3F8007A0387 /* CBZSplashView.h */,
+				CA4C85DB1B6BC3F8007A0387 /* CBZSplashView.m */,
+				CA4C85DC1B6BC3F8007A0387 /* CBZVectorSplashView.h */,
+				CA4C85DD1B6BC3F8007A0387 /* CBZVectorSplashView.m */,
+				CA4C85C51B6BC352007A0387 /* FlappyDickbutt-Bridging-Header.h */,
+			);
+			path = CBZSplashView;
+			sourceTree = "<group>";
+		};
 		CAA4688D1B66EB4E003DC0EE = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +105,7 @@
 		CAA468981B66EB4E003DC0EE /* FlappyDickbutt */ = {
 			isa = PBXGroup;
 			children = (
+				CA4C85BB1B6BC318007A0387 /* CBZSplashView */,
 				CAA4689B1B66EB4E003DC0EE /* AppDelegate.swift */,
 				CAA4689D1B66EB4E003DC0EE /* GameScene.sks */,
 				CAA4689F1B66EB4E003DC0EE /* GameScene.swift */,
@@ -90,7 +115,6 @@
 				CAA468A81B66EB4E003DC0EE /* LaunchScreen.xib */,
 				CAA468991B66EB4E003DC0EE /* Supporting Files */,
 			);
-			name = FlappyDickbutt;
 			path = FlappyDickbutt;
 			sourceTree = "<group>";
 		};
@@ -108,7 +132,6 @@
 				CAA468B51B66EB4F003DC0EE /* FlappyDickbuttTests.swift */,
 				CAA468B31B66EB4F003DC0EE /* Supporting Files */,
 			);
-			name = FlappyDickbuttTests;
 			path = FlappyDickbuttTests;
 			sourceTree = "<group>";
 		};
@@ -223,6 +246,9 @@
 			files = (
 				CAA468A01B66EB4E003DC0EE /* GameScene.swift in Sources */,
 				CAA468A21B66EB4E003DC0EE /* GameViewController.swift in Sources */,
+				CA4C85E01B6BC3F8007A0387 /* CBZVectorSplashView.m in Sources */,
+				CA4C85DF1B6BC3F8007A0387 /* CBZSplashView.m in Sources */,
+				CA4C85DE1B6BC3F8007A0387 /* CBZRasterSplashView.m in Sources */,
 				CAA4689C1B66EB4E003DC0EE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -352,10 +378,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = FlappyDickbutt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = FlappyDickbutt;
+				SWIFT_OBJC_BRIDGING_HEADER = "FlappyDickbutt/CBZSplashView/FlappyDickbutt-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -363,10 +392,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = FlappyDickbutt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = FlappyDickbutt;
+				SWIFT_OBJC_BRIDGING_HEADER = "FlappyDickbutt/CBZSplashView/FlappyDickbutt-Bridging-Header.h";
 			};
 			name = Release;
 		};
