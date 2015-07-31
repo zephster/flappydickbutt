@@ -343,19 +343,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         pipeColumn.addChild(bottomPipe)
 
         // offset to the right of the pipes, so you actually have to pass the pipes a little to register a score
-        let scoreOffset:CGFloat = self.hero.size.width / 2
+        let scoreOffset:CGFloat = self.hero.size.width / 3
 
         // set up a contact area for the pipe gap, whose event trigger will increment the score
         let pipeGap                             = SKNode()
-        pipeGap.position                        = CGPoint(x: topPipe.size.width, y: self.frame.size.height)
-        pipeGap.physicsBody                     = SKPhysicsBody(rectangleOfSize: CGSize(width: 1.0, height: self.frame.size.height))
+        pipeGap.position                        = CGPoint(x: topPipe.size.width - scoreOffset, y: self.frame.size.height / 1.50)
+        pipeGap.physicsBody                     = SKPhysicsBody(rectangleOfSize: CGSize(width: 0.1, height: self.frame.height / 1.75))
         pipeGap.physicsBody?.dynamic            = false
         pipeGap.physicsBody?.categoryBitMask    = self.pipeGapBitMask
         pipeGap.physicsBody?.contactTestBitMask = self.heroBitMask
 
         pipeColumn.addChild(pipeGap)
-
-
         pipeColumn.runAction(self.pipeNodeAnimation)
         self.pipesNode.addChild(pipeColumn)
     }
