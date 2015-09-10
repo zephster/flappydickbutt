@@ -143,8 +143,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             // remove the bitmask on this pipe node, to prevent multiple triggers
             contact.bodyB.categoryBitMask = 0
         }
-            // check if the two bodies are hero and pipe (game over)
-        else if contactMask == self.heroBitMask | self.pipeBitMask
+        // check if the two bodies are hero and pipe or ground (game over)
+        else if contactMask == self.heroBitMask | self.pipeBitMask ||
+                contactMask == self.heroBitMask | self.groundBitMask
         {
             // if retry button isn't on the screen already (also prevents multiple triggers)
             if self.retryButton.parent == nil
@@ -172,12 +173,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         hero.physicsBody?.categoryBitMask = self.heroBitMask
 
         // determines which objects hero is capable of colliding and interacting with (bouncing off, etc)
-        // don't need | self.pipeCat because upon contacting a pipe, it's event (below) will fire and the game will end
+        // don't need | self.pipeBitMask because upon contacting a pipe, it's event (below) will fire and the game will end
         hero.physicsBody?.collisionBitMask = self.groundBitMask
 
         // determines which objects send an event when collided with (without collisionBitMask, objects would pass through but still be detected)
-        // don't need | self.levelCat because i don't need an event for touching the ground
-        hero.physicsBody?.contactTestBitMask = self.pipeBitMask
+        // detect hits on pipes and ground, which cause a game over
+        hero.physicsBody?.contactTestBitMask = self.pipeBitMask | self.groundBitMask
 
         // add to scene
         self.addChild(hero)
